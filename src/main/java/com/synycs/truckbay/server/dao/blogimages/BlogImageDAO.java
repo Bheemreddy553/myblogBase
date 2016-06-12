@@ -52,7 +52,7 @@ public class BlogImageDAO extends DAO {
         try(Connection connection= ServerContext.getInstance().getConnection())
         {
             // TO DO : Make changes according to the changed DAOs queries below
-            sqlClass = getPreparedSQLStatement("UserDetailsDAOQuery");
+            sqlClass = getPreparedSQLStatement("BlogImageDAOQuery");
             logger.debug("SQL Statment: {}", sqlClass.toString());
 
 
@@ -85,12 +85,12 @@ public class BlogImageDAO extends DAO {
         {
             e.printStackTrace();
             logger.error(" admin : createUser SQL: {}", sqlClass.toString());
-            throw TBExceptionFactory.GetInstance().create("",e.getMessage(), e.toString());
+            throw new TBException(e.toString(),e.getMessage());
         }
         catch (Exception e)
         {
             logger.error(" admin : createUser SQL: {}", sqlClass.toString());
-            throw TBExceptionFactory.GetInstance().create("",e.getMessage(), e.toString());
+            throw new TBException(e.toString(),e.getMessage());
         }
         finally
         {
@@ -257,7 +257,7 @@ public class BlogImageDAO extends DAO {
         {
 
             StringBuffer sql = new StringBuffer();
-            sql.append(" INSERT INTO blogposts ");
+            sql.append(" INSERT INTO images ");
             sql.append("values(?, ?, ?, ?, ?, ?,?,?)");
 
             statementStr= sql.toString();
@@ -288,7 +288,7 @@ public class BlogImageDAO extends DAO {
         {
 
             StringBuffer sql = new StringBuffer();
-            sql.append(" SELECT * FROM blogposts id = ? ");
+            sql.append(" SELECT * FROM images id = ? ");
         
             statementStr= sql.toString();
         }
@@ -318,7 +318,7 @@ public class BlogImageDAO extends DAO {
         {
 
             StringBuffer sql = new StringBuffer();
-            sql.append(" SELECT * FROM blogposts ");
+            sql.append(" SELECT * FROM images ");
         
             statementStr= sql.toString();
         }
