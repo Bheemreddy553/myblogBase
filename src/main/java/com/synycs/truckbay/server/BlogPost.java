@@ -1,9 +1,7 @@
 package com.synycs.truckbay.server;
 
-import java.util.Date;
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Date;
 
 @XmlRootElement
 public class BlogPost {
@@ -15,7 +13,7 @@ public class BlogPost {
 	private String country;
 	private Date	time;
 	private UserDetails	userDetails;
-	private List<BlogImage> blogImages;
+	private BlogImage blogImage;
 	
 	public String getId() {
 		return id;
@@ -61,16 +59,12 @@ public class BlogPost {
 		this.userDetails = userDetails;
 	}
 
-	public List<BlogImage> getBlogImages() {
-		return blogImages;
+
+	public BlogImage getBlogImage() {
+		return blogImage;
 	}
 
-	public void setBlogImages(List<BlogImage> blogImages) {
-		this.blogImages = blogImages;
+	public void setBlogImage(BlogImage blogImage) {
+		this.blogImage = blogImage;
 	}
-	
-	
-	
-	
-
 }

@@ -1,15 +1,16 @@
 package com.synycs.truckbay.server.services;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.synycs.truckbay.common.exception.TBException;
 import com.synycs.truckbay.server.BlogImage;
 import com.synycs.truckbay.server.BlogPost;
+import com.synycs.truckbay.server.BlogPostDetails;
 import com.synycs.truckbay.server.dao.blogimages.BlogImageDAO;
 import com.synycs.truckbay.server.dao.blogposts.BlogPostDAO;
+import com.synycs.truckbay.server.dao.blogposts.BlogPostDetailsDAO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class AdminService {
 	private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
@@ -77,5 +78,34 @@ public class AdminService {
 	public BlogImage getBlogImageById(String id)throws TBException{
 		return new BlogImageDAO(id).getBlogImageById();
 	}
-	
+
+	/**
+	 * to add Blog post details
+	 * @param blogPostDetails
+	 * @throws TBException
+	 */
+	public void addBlogPostDetails(BlogPostDetails blogPostDetails)throws TBException{
+		new BlogPostDetailsDAO(blogPostDetails).register();
+	}
+
+
+	/**
+	 * to get Blog Post Details By Id
+	 * @param id
+	 * @return
+	 * @throws TBException
+	 */
+	public BlogPostDetails getBlogPostDetailsById(String id)throws TBException{
+	    return  	new BlogPostDetailsDAO(id).getBlogPostDetailsById();
+	}
+
+	/**
+	 * to get all blog post details
+	 * @return
+	 * @throws TBException
+	 */
+	public List<BlogPostDetails> getAllBlogPostDetails()throws TBException{
+		return  new BlogPostDetailsDAO().getAllBlogPostDetails();
+	}
+
 }

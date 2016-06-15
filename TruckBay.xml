@@ -1,9 +1,9 @@
 <TruckBay Path="">
     <Object Name="Database" type="MySQL">
-        <Field Name="HOSTNAME" value="173.194.255.40"/>
-        <Field Name="DBNAME" value="truckbay"/>
+        <Field Name="HOSTNAME" value="localhost"/>
+        <Field Name="DBNAME" value="myblog"/>
         <Field Name="PORT" value="3306"/>
-        <Field Name="DBUSERNAME" value="myuser"/>
+        <Field Name="DBUSERNAME" value="root"/>
         <Field Name="DBPASSWORD" value="naga"/>
     </Object>
 </TruckBay>

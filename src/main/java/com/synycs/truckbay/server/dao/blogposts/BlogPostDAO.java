@@ -1,29 +1,25 @@
 package com.synycs.truckbay.server.dao.blogposts;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-  
 import com.synycs.truckbay.common.dao.DAO;
 import com.synycs.truckbay.common.dao.SQLPreparedStatement;
 import com.synycs.truckbay.common.exception.TBException;
 import com.synycs.truckbay.common.exception.TBExceptionFactory;
 import com.synycs.truckbay.server.BlogPost;
+import com.synycs.truckbay.server.BlogPostDetails;
 import com.synycs.truckbay.server.ServerContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class BlogPostDAO  extends DAO{
-	
+	private static final Logger logger = LoggerFactory.getLogger(BlogPostDAO.class);
+
 	 	private BlogPost blogPost=null;
 	    private String id=null;
-	    private static final Logger logger = LoggerFactory.getLogger(BlogPostDAO.class);
 
 	    public BlogPostDAO(){}
 	    public BlogPostDAO(BlogPost blogPost){
@@ -58,7 +54,7 @@ public class BlogPostDAO  extends DAO{
 	            logger.debug("SQL Statment: {}", sqlClass.toString());
 
 
-	            insertStmt = sqlClass.getStatement(connection);
+	            insertStmt = sqlClass.getStatementReturnKeys(connection);
 	            insertStmt.setString(BlogPostDAOQuery.TITLE, blogPost.getTitle());
 	            insertStmt.setString(BlogPostDAOQuery.ID, blogPost.getId());
 	            insertStmt.setString(BlogPostDAOQuery.BODY, blogPost.getBody());
@@ -69,8 +65,17 @@ public class BlogPostDAO  extends DAO{
 	            
 	            try {
 	                insertStmt.execute();
-
-
+					ResultSet resultSet=insertStmt.getGeneratedKeys();
+					if(resultSet.next()){
+						blogPost.setId(resultSet.getString(1));
+					}
+					BlogPostDetails blogPostDetails = new BlogPostDetails();
+					blogPostDetails.setPostId(blogPost.getId());
+					blogPostDetails.setSubject(blogPost.getBody().substring(0, 200));
+					blogPostDetails.setTime(blogPost.getTime());
+					//blogPostDetails.setImageUrl(blogPost.getBlogImage().getUrl());
+					blogPostDetails.setTitle(blogPost.getTitle());
+					new BlogPostDetailsDAO(blogPostDetails).register(connection);
 	                connection.commit();
 	            }
 	            catch (Exception e){
@@ -115,16 +120,16 @@ public class BlogPostDAO  extends DAO{
 	            SQLClass = getPreparedSQLStatement("BlogPostByIdDAOQuery");
 
 	            logger.debug("SQL Statment: {}", SQLClass.toString());
+				if(id == null){
+					throw new TBException("","empty object passed");
+				}
 
-	            stmt = SQLClass.getStatement(connection); 
+				stmt = SQLClass.getStatement(connection);
 	            stmt.setString(1,id);
 	            rs = stmt.executeQuery();
 
-	            if(id == null){
-	            	throw new TBException("","empty object passed");
-	            }
-	            
-	            
+
+
 	            blogPost1 = new BlogPost();
 	            int numObjsLoaded = 0;
 
@@ -141,7 +146,7 @@ public class BlogPostDAO  extends DAO{
 	                 blogPost1.setLocation(rs.getString(BlogPostByIdDAOQuery.LOCATION));
 	                 blogPost1.setCountry(rs.getString(BlogPostByIdDAOQuery.COUNTRY));
 	                 blogPost1.setTime(new Date(rs.getTimestamp((BlogPostByIdDAOQuery.TIME)).getTime()));
-	                 
+	                 numObjsLoaded++;
 	            }
 	            connection.close();
 
@@ -160,12 +165,12 @@ public class BlogPostDAO  extends DAO{
 
 	        }
 	        catch(SQLException e)
-	        {
+	        {  e.printStackTrace();
 	            logger.error(" customerLoginName: {}, Login SQL: {}", id, SQLClass.toString());
 	            throw TBExceptionFactory.GetInstance().create("",e.getMessage(), e.toString());
 	        }
 	        catch (Exception e)
-	        {
+	        {  e.printStackTrace();
 	            logger.error(" customerLoginName: {}, Login SQL: {}", id, SQLClass.toString());
 	            throw TBExceptionFactory.GetInstance().create("",e.getMessage(), e.toString());
 	        }
@@ -285,7 +290,7 @@ public class BlogPostDAO  extends DAO{
 	        {
 
 	            StringBuffer sql = new StringBuffer();
-	            sql.append(" SELECT * FROM blogposts id = ? ");
+	            sql.append(" SELECT * FROM blogposts where id = ? ");
 	        
 	            statementStr= sql.toString();
 	        }

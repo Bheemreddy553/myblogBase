@@ -1,15 +1,14 @@
 package com.synycs.truckbay.server;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Date;
 
 @XmlRootElement
 public class BlogImage {
 	
 	private String id;
 	private String	title;
-	private String	url;
+	private String url;
 	private String	location;
 	private String country;
 	private BlogPost	blogPost;
@@ -27,12 +26,6 @@ public class BlogImage {
 	}
 	public void setTitle(String title) {
 		this.title = title;
-	}
-	public String getUrl() {
-		return url;
-	}
-	public void setUrl(String url) {
-		this.url = url;
 	}
 	public String getLocation() {
 		return location;
@@ -64,6 +57,12 @@ public class BlogImage {
 	public void setUserDetails(UserDetails userDetails) {
 		this.userDetails = userDetails;
 	}
-	
-	
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
 }
